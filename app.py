@@ -24,17 +24,17 @@ st.set_page_config(
 )
 
 # Paleta Starbucks
-GREEN_DARK   = "#006241"
-GREEN_LIGHT  = "#1e3932"
-GOLD         = "#cba258"
-ACCENT_RED   = "#d62828"
-NEUTRAL      = "#3d3935"
-BG_CREAM     = "#f5f1e8"
+GREEN_DARK   = "#1e3932" # Very deep forest green
+GREEN_LIGHT  = "#006241" # Rich house green
+GOLD         = "#cba258" # Warm accent gold
+ACCENT_RED   = "#a6192e" # Crimson red for alerts/dormidos
+NEUTRAL      = "#2d2926" # Off-black/Charcoal
+BG_CREAM     = "#f9f8f6" # Fresh cream background
 
 PALETA_RFM = {
     "Dormidos":          ACCENT_RED,
     "Regulares Activos": GOLD,
-    "Leales Premium":    GREEN_DARK,
+    "Leales Premium":    GREEN_LIGHT,
 }
 PALETA_SOCIO = [GREEN_DARK, GOLD, GREEN_LIGHT]
 
@@ -43,128 +43,232 @@ PALETA_SOCIO = [GREEN_DARK, GOLD, GREEN_LIGHT]
 # =========================================================
 st.markdown(f"""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    html, body, [class*="css"] {{
+    /* Global Typography */
+    html, body, [data-testid="stAppViewContainer"] {{
         font-family: 'Inter', sans-serif;
+        color: {NEUTRAL};
     }}
-    h1, h2, h3 {{
+    
+    h1, h2, h3, h4, h5, h6 {{
         font-family: 'Playfair Display', serif;
-        color: {GREEN_DARK};
+        color: {GREEN_DARK} !important;
+        font-weight: 800;
     }}
+    
     h1 {{
-        font-weight: 900;
         letter-spacing: -1px;
     }}
+    
+    /* Main container styling */
     .stApp {{
         background: {BG_CREAM};
     }}
+    
     .block-container {{
-        padding-top: 2rem;
-        padding-bottom: 4rem;
+        padding-top: 3rem;
+        padding-bottom: 5rem;
         max-width: 1200px;
     }}
+    
+    /* Sidebar Styling */
     section[data-testid="stSidebar"] {{
-        background: {GREEN_DARK};
+        background: {GREEN_DARK} !important;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.15);
     }}
-    section[data-testid="stSidebar"] * {{
+    
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {{
+        font-family: 'Playfair Display', serif;
         color: white !important;
+        font-weight: 700;
     }}
+    
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] li {{
+        color: rgba(255, 255, 255, 0.85) !important;
+    }}
+    
+    section[data-testid="stSidebar"] hr {{
+        border-color: rgba(255, 255, 255, 0.15) !important;
+    }}
+
+    /* Modern Navigation Tabs inside Sidebar */
     section[data-testid="stSidebar"] .stButton button {{
-        background: transparent;
-        color: white !important;
-        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: left;
-        font-weight: 400;
-        border-radius: 4px;
-        margin: 2px 0;
+        justify-content: flex-start;
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+        margin: 4px 0;
+        width: 100%;
     }}
-    section[data-testid="stSidebar"] .stButton button:hover {{
-        background: rgba(203, 162, 88, 0.2);
+    
+    /* Secondary (inactive) button in sidebar */
+    section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"] {{
+        background-color: rgba(255, 255, 255, 0.06);
+        color: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }}
+    
+    section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"]:hover {{
+        background-color: rgba(203, 162, 88, 0.15);
+        color: {GOLD} !important;
         border-color: {GOLD};
+        transform: translateX(4px);
     }}
+    
+    /* Primary (active) button in sidebar */
+    section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="primary"] {{
+        background-color: {GOLD};
+        color: {GREEN_DARK} !important;
+        border: 1px solid {GOLD};
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(203, 162, 88, 0.25);
+    }}
+    
+    section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="primary"]:hover {{
+        background-color: #dfb468;
+        border-color: #dfb468;
+        transform: translateX(4px);
+    }}
+    
+    .stButton button {{
+        border-radius: 8px;
+        font-weight: 500;
+    }}
+    
     .slide-counter {{
         color: {NEUTRAL};
         text-align: center;
-        font-size: 0.85rem;
-        font-style: italic;
-        opacity: 0.7;
+        font-size: 0.9rem;
+        font-weight: 500;
+        opacity: 0.8;
+        background: rgba(0, 0, 0, 0.03);
+        padding: 0.5rem;
+        border-radius: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }}
+    
+    /* Metrics & Cards Styling with Soft Shadows and Micro-animations */
     .metric-card {{
         background: white;
-        padding: 1.5rem;
-        border-radius: 8px;
-        border-left: 4px solid {GREEN_DARK};
-        margin: 0.5rem 0;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        padding: 1.6rem;
+        border-radius: 16px;
+        border-left: 5px solid {GREEN_LIGHT};
+        margin: 0.8rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
+    
+    .metric-card:hover {{
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    }}
+    
     .metric-value {{
         font-family: 'Playfair Display', serif;
-        font-size: 2.2rem;
+        font-size: 2.4rem;
         font-weight: 900;
         color: {GREEN_DARK};
         line-height: 1;
     }}
+    
     .metric-label {{
         color: {NEUTRAL};
         font-size: 0.85rem;
+        font-weight: 600;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 0.3rem;
+        letter-spacing: 1.2px;
+        margin-top: 0.4rem;
+        opacity: 0.8;
     }}
+    
     .meta-card {{
         background: white;
-        padding: 1.8rem;
-        border-radius: 12px;
-        border-top: 5px solid {GREEN_DARK};
-        margin: 1rem 0;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        padding: 2rem;
+        border-radius: 20px;
+        border-top: 6px solid {GREEN_LIGHT};
+        margin: 1.2rem 0;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.03);
+        border: 1px solid rgba(0,0,0,0.05);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
+    
+    .meta-card:hover {{
+        transform: translateY(-3px);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.07);
+    }}
+    
     .meta-card.reactivacion {{
         border-top-color: {ACCENT_RED};
     }}
+    
     .meta-card.premium {{
         border-top-color: {GOLD};
     }}
+    
     .meta-card h3 {{
         margin-top: 0;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
+        font-weight: 800;
     }}
+    
     .meta-card .badge {{
         display: inline-block;
-        background: {GREEN_DARK};
+        background: {GREEN_LIGHT};
         color: white;
-        padding: 0.2rem 0.7rem;
-        border-radius: 4px;
+        padding: 0.25rem 0.8rem;
+        border-radius: 6px;
         font-size: 0.75rem;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1px;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
     }}
+    
     .meta-card .badge.gold {{
         background: {GOLD};
+        color: {GREEN_DARK};
     }}
+    
     .meta-card .badge.red {{
         background: {ACCENT_RED};
     }}
+    
     .quote-block {{
         background: white;
-        border-left: 5px solid {GOLD};
-        padding: 1.5rem 2rem;
-        margin: 1.5rem 0;
+        border-left: 6px solid {GOLD};
+        padding: 1.6rem 2.2rem;
+        margin: 1.8rem 0;
         font-style: italic;
-        font-size: 1.05rem;
+        font-size: 1.1rem;
         color: {NEUTRAL};
-        border-radius: 0 6px 6px 0;
+        border-radius: 0 16px 16px 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        border: 1px solid rgba(0,0,0,0.04);
+        border-left-width: 6px;
     }}
+    
     .footer-portada {{
         color: {NEUTRAL};
-        opacity: 0.6;
-        font-size: 0.85rem;
+        opacity: 0.7;
+        font-size: 0.9rem;
+        line-height: 1.6;
     }}
+    
     hr {{
-        border-color: {GOLD};
-        opacity: 0.3;
+        border: 0;
+        height: 1px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+        margin: 2rem 0;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -255,8 +359,10 @@ with st.sidebar:
     st.markdown("### ☕ Navegación")
     st.markdown("---")
     for i, titulo in enumerate(SLIDES):
-        marker = "▶" if i == st.session_state.slide else "○"
-        if st.button(f"{marker}  {i+1}. {titulo}", key=f"nav_{i}", use_container_width=True):
+        is_active = (i == st.session_state.slide)
+        marker = "▶" if is_active else "○"
+        type_btn = "primary" if is_active else "secondary"
+        if st.button(f"{marker}  {i+1}. {titulo}", key=f"nav_{i}", use_container_width=True, type=type_btn):
             go_to(i)
             st.rerun()
     st.markdown("---")
@@ -490,8 +596,9 @@ elif slide == 5:
         fig.update_layout(
             showlegend=False,
             margin=dict(t=20, b=20, l=20, r=20),
-            paper_bgcolor=BG_CREAM,
-            plot_bgcolor=BG_CREAM,
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Inter, sans-serif"),
             height=350,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -514,9 +621,18 @@ elif slide == 5:
             marker=dict(size=14),
         ))
     fig2.update_layout(
-        yaxis=dict(title="Valor normalizado [0,1]", range=[-0.05, 1.1]),
-        paper_bgcolor=BG_CREAM,
-        plot_bgcolor="white",
+        yaxis=dict(
+            title="Valor normalizado [0,1]", 
+            range=[-0.05, 1.1],
+            gridcolor="rgba(0,0,0,0.06)",
+            zerolinecolor="rgba(0,0,0,0.1)"
+        ),
+        xaxis=dict(
+            gridcolor="rgba(0,0,0,0.06)"
+        ),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Inter, sans-serif"),
         height=350,
         margin=dict(t=20, b=20),
         legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5),
@@ -557,8 +673,10 @@ elif slide == 6:
         fig.update_traces(texttemplate="%{text}%", textposition="outside")
         fig.update_layout(
             showlegend=False,
-            paper_bgcolor=BG_CREAM,
-            plot_bgcolor="white",
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            font=dict(family="Inter, sans-serif"),
+            yaxis=dict(gridcolor="rgba(0,0,0,0.06)"),
             yaxis_title="N° clientes",
             xaxis_title="",
             height=400,
@@ -652,7 +770,9 @@ elif slide == 8:
         labels=dict(x="Comportamiento RFM", y="Perfil Sociodemográfico", color="% mercado"),
     )
     fig.update_layout(
-        paper_bgcolor=BG_CREAM,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Inter, sans-serif"),
         height=400,
         margin=dict(t=30, b=20),
         coloraxis_colorbar=dict(title="% mercado"),
@@ -669,8 +789,10 @@ elif slide == 8:
     )
     fig2.update_traces(texttemplate="%{text}%", textposition="outside")
     fig2.update_layout(
-        paper_bgcolor=BG_CREAM,
-        plot_bgcolor="white",
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Inter, sans-serif"),
+        xaxis=dict(gridcolor="rgba(0,0,0,0.06)"),
         xaxis_title="% del mercado",
         yaxis_title="",
         height=450,
@@ -700,7 +822,9 @@ elif slide == 9:
         labels=dict(x="Variable de experiencia", y="Segmento", color="Índice (base 100)"),
     )
     fig.update_layout(
-        paper_bgcolor=BG_CREAM,
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        font=dict(family="Inter, sans-serif"),
         height=500,
         margin=dict(t=30, b=20),
     )
