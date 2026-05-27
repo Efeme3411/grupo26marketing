@@ -23,20 +23,21 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Paleta Starbucks
-GREEN_DARK   = "#1e3932" # Very deep forest green
-GREEN_LIGHT  = "#006241" # Rich house green
+# Paleta Starbucks (Edición Premium Dark Mode)
+GREEN_DARK   = "#0f1e1a" # Deep forest green-black (App background)
+GREEN_LIGHT  = "#00b374" # Vibrant house green (Primary accents)
 GOLD         = "#cba258" # Warm accent gold
-ACCENT_RED   = "#a6192e" # Crimson red for alerts/dormidos
-NEUTRAL      = "#2d2926" # Off-black/Charcoal
-BG_CREAM     = "#f9f8f6" # Fresh cream background
+ACCENT_RED   = "#ef4444" # Bright red for alerts/dormidos
+NEUTRAL      = "#eceff1" # Soft white/light gray for text
+BG_CREAM     = "#0f1e1a" # Deep background
+BG_CARD      = "#182c26" # Lighter forest green for cards
 
 PALETA_RFM = {
     "Dormidos":          ACCENT_RED,
     "Regulares Activos": GOLD,
     "Leales Premium":    GREEN_LIGHT,
 }
-PALETA_SOCIO = [GREEN_DARK, GOLD, GREEN_LIGHT]
+PALETA_SOCIO = [GREEN_LIGHT, GOLD, "#1e3932"]
 
 # =========================================================
 # ESTILOS
@@ -53,7 +54,7 @@ st.markdown(f"""
     
     h1, h2, h3, h4, h5, h6 {{
         font-family: 'Playfair Display', serif;
-        color: {GREEN_LIGHT} !important;
+        color: white !important;
         font-weight: 800;
     }}
     
@@ -72,10 +73,11 @@ st.markdown(f"""
         max-width: 1200px;
     }}
     
-    /* Sidebar Styling (High contrast, light theme native layout) */
+    /* Sidebar Styling (High contrast, dark theme native layout) */
     section[data-testid="stSidebar"] {{
-        box-shadow: 4px 0 15px rgba(0,0,0,0.05);
-        border-right: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: {BG_CARD} !important;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.3);
+        border-right: 1px solid rgba(255, 255, 255, 0.05);
     }}
     
     section[data-testid="stSidebar"] h1,
@@ -83,7 +85,7 @@ st.markdown(f"""
     section[data-testid="stSidebar"] h3,
     section[data-testid="stSidebar"] h4 {{
         font-family: 'Playfair Display', serif;
-        color: {GREEN_LIGHT} !important;
+        color: {GOLD} !important;
         font-weight: 700;
     }}
     
@@ -95,7 +97,7 @@ st.markdown(f"""
     }}
     
     section[data-testid="stSidebar"] hr {{
-        border-color: rgba(0, 0, 0, 0.1) !important;
+        border-color: rgba(255, 255, 255, 0.08) !important;
     }}
 
     /* Modern Navigation Tabs inside Sidebar */
@@ -112,13 +114,13 @@ st.markdown(f"""
     
     /* Secondary (inactive) button in sidebar */
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"] {{
-        background-color: transparent;
-        color: {NEUTRAL} !important;
-        border: 1px solid rgba(0, 0, 0, 0.08);
+        background-color: rgba(255, 255, 255, 0.03);
+        color: rgba(255, 255, 255, 0.7) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08);
     }}
     
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"]:hover {{
-        background-color: rgba(0, 98, 65, 0.08);
+        background-color: rgba(0, 179, 116, 0.15);
         color: {GREEN_LIGHT} !important;
         border-color: {GREEN_LIGHT};
         transform: translateX(4px);
@@ -126,16 +128,16 @@ st.markdown(f"""
     
     /* Primary (active) button in sidebar */
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="primary"] {{
-        background-color: {GREEN_LIGHT};
-        color: white !important;
-        border: 1px solid {GREEN_LIGHT};
+        background-color: {GOLD};
+        color: {GREEN_DARK} !important;
+        border: 1px solid {GOLD};
         font-weight: 600;
-        box-shadow: 0 4px 12px rgba(0, 98, 65, 0.15);
+        box-shadow: 0 4px 12px rgba(203, 162, 88, 0.25);
     }}
     
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="primary"]:hover {{
-        background-color: #004d33;
-        border-color: #004d33;
+        background-color: #dfb468;
+        border-color: #dfb468;
         transform: translateX(4px);
     }}
     
@@ -150,34 +152,34 @@ st.markdown(f"""
         font-size: 0.9rem;
         font-weight: 500;
         opacity: 0.8;
-        background: rgba(0, 0, 0, 0.03);
+        background: rgba(255, 255, 255, 0.03);
         padding: 0.5rem;
         border-radius: 8px;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }}
     
     /* Metrics & Cards Styling with Soft Shadows and Micro-animations */
     .metric-card {{
-        background: white;
+        background: {BG_CARD};
         padding: 1.6rem;
         border-radius: 16px;
         border-left: 5px solid {GREEN_LIGHT};
         margin: 0.8rem 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
     
     .metric-card:hover {{
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.25);
     }}
     
     .metric-value {{
         font-family: 'Playfair Display', serif;
         font-size: 2.4rem;
         font-weight: 900;
-        color: {GREEN_LIGHT};
+        color: {GOLD};
         line-height: 1;
     }}
     
@@ -188,23 +190,23 @@ st.markdown(f"""
         text-transform: uppercase;
         letter-spacing: 1.2px;
         margin-top: 0.4rem;
-        opacity: 0.8;
+        opacity: 0.7;
     }}
     
     .meta-card {{
-        background: white;
+        background: {BG_CARD};
         padding: 2rem;
         border-radius: 20px;
         border-top: 6px solid {GREEN_LIGHT};
         margin: 1.2rem 0;
-        box-shadow: 0 6px 24px rgba(0,0,0,0.03);
-        border: 1px solid rgba(0,0,0,0.05);
+        box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
     
     .meta-card:hover {{
         transform: translateY(-3px);
-        box-shadow: 0 10px 35px rgba(0,0,0,0.07);
+        box-shadow: 0 10px 35px rgba(0,0,0,0.25);
     }}
     
     .meta-card.reactivacion {{
@@ -219,6 +221,7 @@ st.markdown(f"""
         margin-top: 0;
         font-size: 1.5rem;
         font-weight: 800;
+        color: white !important;
     }}
     
     .meta-card .badge {{
@@ -245,22 +248,22 @@ st.markdown(f"""
     }}
     
     .quote-block {{
-        background: white;
+        background: {BG_CARD};
         border-left: 6px solid {GOLD};
         padding: 1.6rem 2.2rem;
         margin: 1.8rem 0;
         font-style: italic;
         font-size: 1.1rem;
-        color: {NEUTRAL};
+        color: rgba(255, 255, 255, 0.85);
         border-radius: 0 16px 16px 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-        border: 1px solid rgba(0,0,0,0.04);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         border-left-width: 6px;
     }}
     
     .footer-portada {{
         color: {NEUTRAL};
-        opacity: 0.7;
+        opacity: 0.6;
         font-size: 0.9rem;
         line-height: 1.6;
     }}
@@ -268,7 +271,7 @@ st.markdown(f"""
     hr {{
         border: 0;
         height: 1px;
-        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
         margin: 2rem 0;
     }}
 </style>
@@ -655,7 +658,7 @@ elif slide == 5:
             margin=dict(t=20, b=20, l=20, r=20),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Inter, sans-serif"),
+            font=dict(family="Inter, sans-serif", color="#eceff1"),
             height=350,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -681,15 +684,15 @@ elif slide == 5:
         yaxis=dict(
             title="Valor normalizado [0,1]", 
             range=[-0.05, 1.1],
-            gridcolor="rgba(0,0,0,0.06)",
-            zerolinecolor="rgba(0,0,0,0.1)"
+            gridcolor="rgba(255,255,255,0.08)",
+            zerolinecolor="rgba(255,255,255,0.15)"
         ),
         xaxis=dict(
-            gridcolor="rgba(0,0,0,0.06)"
+            gridcolor="rgba(255,255,255,0.08)"
         ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter, sans-serif"),
+        font=dict(family="Inter, sans-serif", color="#eceff1"),
         height=350,
         margin=dict(t=20, b=20),
         legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5),
