@@ -45,7 +45,7 @@ st.markdown(f"""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap');
 
-    /* Global Typography */
+    /* Global Typography and Contrast Control */
     html, body, [data-testid="stAppViewContainer"] {{
         font-family: 'Inter', sans-serif;
         color: {NEUTRAL};
@@ -53,7 +53,7 @@ st.markdown(f"""
     
     h1, h2, h3, h4, h5, h6 {{
         font-family: 'Playfair Display', serif;
-        color: {GREEN_DARK} !important;
+        color: {GREEN_LIGHT} !important;
         font-weight: 800;
     }}
     
@@ -72,10 +72,10 @@ st.markdown(f"""
         max-width: 1200px;
     }}
     
-    /* Sidebar Styling */
+    /* Sidebar Styling (High contrast, light theme native layout) */
     section[data-testid="stSidebar"] {{
-        background: {GREEN_DARK} !important;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+        box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+        border-right: 1px solid rgba(0, 0, 0, 0.08);
     }}
     
     section[data-testid="stSidebar"] h1,
@@ -83,7 +83,7 @@ st.markdown(f"""
     section[data-testid="stSidebar"] h3,
     section[data-testid="stSidebar"] h4 {{
         font-family: 'Playfair Display', serif;
-        color: white !important;
+        color: {GREEN_LIGHT} !important;
         font-weight: 700;
     }}
     
@@ -91,11 +91,11 @@ st.markdown(f"""
     section[data-testid="stSidebar"] span,
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] li {{
-        color: rgba(255, 255, 255, 0.85) !important;
+        color: {NEUTRAL} !important;
     }}
     
     section[data-testid="stSidebar"] hr {{
-        border-color: rgba(255, 255, 255, 0.15) !important;
+        border-color: rgba(0, 0, 0, 0.1) !important;
     }}
 
     /* Modern Navigation Tabs inside Sidebar */
@@ -112,30 +112,30 @@ st.markdown(f"""
     
     /* Secondary (inactive) button in sidebar */
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"] {{
-        background-color: rgba(255, 255, 255, 0.06);
-        color: rgba(255, 255, 255, 0.85) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        background-color: transparent;
+        color: {NEUTRAL} !important;
+        border: 1px solid rgba(0, 0, 0, 0.08);
     }}
     
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"]:hover {{
-        background-color: rgba(203, 162, 88, 0.15);
-        color: {GOLD} !important;
-        border-color: {GOLD};
+        background-color: rgba(0, 98, 65, 0.08);
+        color: {GREEN_LIGHT} !important;
+        border-color: {GREEN_LIGHT};
         transform: translateX(4px);
     }}
     
     /* Primary (active) button in sidebar */
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="primary"] {{
-        background-color: {GOLD};
-        color: {GREEN_DARK} !important;
-        border: 1px solid {GOLD};
+        background-color: {GREEN_LIGHT};
+        color: white !important;
+        border: 1px solid {GREEN_LIGHT};
         font-weight: 600;
-        box-shadow: 0 4px 12px rgba(203, 162, 88, 0.25);
+        box-shadow: 0 4px 12px rgba(0, 98, 65, 0.15);
     }}
     
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="primary"]:hover {{
-        background-color: #dfb468;
-        border-color: #dfb468;
+        background-color: #004d33;
+        border-color: #004d33;
         transform: translateX(4px);
     }}
     
@@ -177,7 +177,7 @@ st.markdown(f"""
         font-family: 'Playfair Display', serif;
         font-size: 2.4rem;
         font-weight: 900;
-        color: {GREEN_DARK};
+        color: {GREEN_LIGHT};
         line-height: 1;
     }}
     
@@ -224,7 +224,7 @@ st.markdown(f"""
     .meta-card .badge {{
         display: inline-block;
         background: {GREEN_LIGHT};
-        color: white;
+        color: white !important;
         padding: 0.25rem 0.8rem;
         border-radius: 6px;
         font-size: 0.75rem;
@@ -236,11 +236,12 @@ st.markdown(f"""
     
     .meta-card .badge.gold {{
         background: {GOLD};
-        color: {GREEN_DARK};
+        color: {GREEN_DARK} !important;
     }}
     
     .meta-card .badge.red {{
         background: {ACCENT_RED};
+        color: white !important;
     }}
     
     .quote-block {{
@@ -274,54 +275,108 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # =========================================================
-# DATOS (hardcoded desde los outputs reales del notebook)
+# DATOS (Carga dinámica de outputs con fallback hardcoded)
 # =========================================================
-# RFM perfiles (de la celda 8 del notebook)
-RFM_PROFILE = pd.DataFrame({
-    "Cluster": [0, 1, 2],
-    "Nombre":  ["Dormidos", "Leales Premium", "Regulares Activos"],
-    "Recency": [296.92, 70.37, 76.03],
-    "Frequency": [4.18, 9.40, 5.52],
-    "Monetary": [61.22, 142.75, 80.27],
-    "N_clientes": [2344, 5254, 7390],
-})
-RFM_PROFILE["% mercado"] = (RFM_PROFILE["N_clientes"] / RFM_PROFILE["N_clientes"].sum() * 100).round(1)
+clientes_path = Path("outputs/clientes_segmentados.csv")
+afinidad_path = Path("outputs/tabla_afinidad.csv")
 
-# Sociodemográfico LCA (de la celda 6)
-SOCIO_PROFILE = pd.DataFrame({
-    "Cluster": [0, 1, 2],
-    "Nombre":  ["Perfil Nicho A", "Mainstream Mayoritario", "Perfil Nicho B"],
-    "N_clientes": [2677, 8951, 3360],
-})
-SOCIO_PROFILE["% mercado"] = (SOCIO_PROFILE["N_clientes"] / SOCIO_PROFILE["N_clientes"].sum() * 100).round(1)
+if clientes_path.exists() and afinidad_path.exists():
+    # Carga dinámica desde los archivos exportados por el Notebook Trabajo2_Starbucks_FINAL_2.ipynb
+    df_clientes = pd.read_csv(clientes_path)
+    
+    # Reconstrucción de perfiles RFM
+    RFM_PROFILE = df_clientes.groupby(["Cluster_RFM_KM", "Nombre_RFM"]).agg(
+        Recency=("Recency", "mean"),
+        Frequency=("Frequency", "mean"),
+        Monetary=("Monetary", "mean"),
+        N_clientes=("customer_id", "count")
+    ).reset_index().rename(columns={"Cluster_RFM_KM": "Cluster", "Nombre_RFM": "Nombre"})
+    RFM_PROFILE["% mercado"] = (RFM_PROFILE["N_clientes"] / RFM_PROFILE["N_clientes"].sum() * 100).round(1)
+    
+    # Reconstrucción de perfiles sociodemográficos
+    SOCIO_PROFILE = df_clientes.groupby(["Cluster_Socio_LCA", "Nombre_Socio"]).agg(
+        N_clientes=("customer_id", "count")
+    ).reset_index().rename(columns={"Cluster_Socio_LCA": "Cluster", "Nombre_Socio": "Nombre"})
+    SOCIO_PROFILE["% mercado"] = (SOCIO_PROFILE["N_clientes"] / SOCIO_PROFILE["N_clientes"].sum() * 100).round(1)
+    
+    # Reconstrucción de la matriz cruzada
+    MATRIZ = df_clientes.groupby(["Cluster_Socio_LCA", "Cluster_RFM_KM", "Segmento_Nombre"]).agg(
+        N=("customer_id", "count"),
+        Rec=("Recency", "mean"),
+        Freq=("Frequency", "mean"),
+        Mon=("Monetary", "mean")
+    ).reset_index().rename(columns={"Cluster_Socio_LCA": "Socio", "Cluster_RFM_KM": "RFM", "Segmento_Nombre": "Nombre"})
+    MATRIZ["Pct"] = (MATRIZ["N"] / MATRIZ["N"].sum() * 100).round(1)
+    
+    # Carga de tabla de afinidades
+    df_af = pd.read_csv(afinidad_path)
+    # Mapeo de códigos (por ejemplo, "1_2" o "Socio_1 · RFM_2") a nombres legibles
+    code_to_name = dict(zip(
+        df_clientes["Cluster_Socio_LCA"].astype(str) + "_" + df_clientes["Cluster_RFM_KM"].astype(str),
+        df_clientes["Segmento_Nombre"]
+    ))
+    # También mapear formatos como "Socio_1 · RFM_2" si es que así viene en la tabla afinidad
+    code_to_name_v2 = dict(zip(
+        "Socio_" + df_clientes["Cluster_Socio_LCA"].astype(str) + " · RFM_" + df_clientes["Cluster_RFM_KM"].astype(str),
+        df_clientes["Segmento_Nombre"]
+    ))
+    
+    if "Segmento_Final" in df_af.columns:
+        df_af = df_af.rename(columns={"Segmento_Final": "Segmento"})
+    elif "Unnamed: 0" in df_af.columns:
+        df_af = df_af.rename(columns={"Unnamed: 0": "Segmento"})
+        
+    df_af["Segmento"] = df_af["Segmento"].astype(str).map(lambda x: code_to_name.get(x, code_to_name_v2.get(x, x)))
+    
+    AFINIDAD = df_af.rename(columns={
+        "customer_satisfaction": "satisfaccion",
+        "num_customizations": "personalizaciones",
+        "fulfillment_time_min": "fulfillment_time",
+        "% mercado": "pct"
+    })
+else:
+    # Fallback hardcoded con los nuevos nombres de cluster (FINAL_2)
+    RFM_PROFILE = pd.DataFrame({
+        "Cluster": [0, 1, 2],
+        "Nombre":  ["Dormidos", "Leales Premium", "Regulares Activos"],
+        "Recency": [296.92, 70.37, 76.03],
+        "Frequency": [4.18, 9.40, 5.52],
+        "Monetary": [61.22, 142.75, 80.27],
+        "N_clientes": [2344, 5254, 7390],
+    })
+    RFM_PROFILE["% mercado"] = (RFM_PROFILE["N_clientes"] / RFM_PROFILE["N_clientes"].sum() * 100).round(1)
 
-# Matriz cruzada (de la celda 16)
-MATRIZ = pd.DataFrame([
-    {"Socio": 1, "RFM": 2, "Nombre": "Mainstream Mayoritario · Regulares Activos", "N": 4194, "Pct": 28.0, "Rec": 76.62, "Freq": 5.48, "Mon": 84.15},
-    {"Socio": 1, "RFM": 1, "Nombre": "Mainstream Mayoritario · Leales Premium",   "N": 3461, "Pct": 23.1, "Rec": 70.98, "Freq": 9.31, "Mon": 147.07},
-    {"Socio": 2, "RFM": 2, "Nombre": "Perfil Nicho B · Regulares Activos",         "N": 1832, "Pct": 12.2, "Rec": 74.72, "Freq": 5.60, "Mon": 74.38},
-    {"Socio": 0, "RFM": 2, "Nombre": "Perfil Nicho A · Regulares Activos",         "N": 1364, "Pct": 9.1,  "Rec": 75.95, "Freq": 5.55, "Mon": 76.21},
-    {"Socio": 1, "RFM": 0, "Nombre": "Mainstream Mayoritario · Dormidos",          "N": 1296, "Pct": 8.6,  "Rec": 301.47, "Freq": 4.22, "Mon": 65.94},
-    {"Socio": 2, "RFM": 1, "Nombre": "Perfil Nicho B · Leales Premium",            "N": 971,  "Pct": 6.5,  "Rec": 67.40, "Freq": 9.61, "Mon": 133.87},
-    {"Socio": 0, "RFM": 1, "Nombre": "Perfil Nicho A · Leales Premium",            "N": 822,  "Pct": 5.5,  "Rec": 71.33, "Freq": 9.55, "Mon": 135.05},
-    {"Socio": 2, "RFM": 0, "Nombre": "Perfil Nicho B · Dormidos",                  "N": 557,  "Pct": 3.7,  "Rec": 290.57, "Freq": 4.21, "Mon": 55.72},
-    {"Socio": 0, "RFM": 0, "Nombre": "Perfil Nicho A · Dormidos",                  "N": 491,  "Pct": 3.3,  "Rec": 292.10, "Freq": 4.02, "Mon": 54.98},
-])
+    SOCIO_PROFILE = pd.DataFrame({
+        "Cluster": [0, 1, 2],
+        "Nombre":  ["Adultos Drive-Thru", "Jóvenes Digitales", "Tradicionales Presenciales"],
+        "N_clientes": [2677, 8951, 3360],
+    })
+    SOCIO_PROFILE["% mercado"] = (SOCIO_PROFILE["N_clientes"] / SOCIO_PROFILE["N_clientes"].sum() * 100).round(1)
 
-# Afinidades (de la celda 18)
-AFINIDAD = pd.DataFrame([
-    {"Segmento": "Mainstream Mayoritario · Regulares Activos", "cart_size": 101.1, "satisfaccion": 100.9, "personalizaciones": 108.8, "fulfillment_time": 101.8, "pct": 28.0},
-    {"Segmento": "Mainstream Mayoritario · Leales Premium",    "cart_size": 105.2, "satisfaccion": 100.7, "personalizaciones": 108.8, "fulfillment_time": 100.8, "pct": 23.1},
-    {"Segmento": "Perfil Nicho B · Regulares Activos",          "cart_size": 93.3,  "satisfaccion": 98.9,  "personalizaciones": 83.8,  "fulfillment_time": 91.0,  "pct": 12.2},
-    {"Segmento": "Perfil Nicho A · Regulares Activos",          "cart_size": 95.4,  "satisfaccion": 98.1,  "personalizaciones": 88.6,  "fulfillment_time": 105.4, "pct": 9.1},
-    {"Segmento": "Mainstream Mayoritario · Dormidos",           "cart_size": 103.3, "satisfaccion": 101.5, "personalizaciones": 111.4, "fulfillment_time": 103.0, "pct": 8.6},
-    {"Segmento": "Perfil Nicho B · Leales Premium",             "cart_size": 98.5,  "satisfaccion": 99.2,  "personalizaciones": 86.4,  "fulfillment_time": 93.7,  "pct": 6.5},
-    {"Segmento": "Perfil Nicho A · Leales Premium",             "cart_size": 98.5,  "satisfaccion": 98.3,  "personalizaciones": 91.2,  "fulfillment_time": 104.4, "pct": 5.5},
-    {"Segmento": "Perfil Nicho B · Dormidos",                   "cart_size": 93.7,  "satisfaccion": 98.9,  "personalizaciones": 83.1,  "fulfillment_time": 89.1,  "pct": 3.7},
-    {"Segmento": "Perfil Nicho A · Dormidos",                   "cart_size": 95.5,  "satisfaccion": 98.0,  "personalizaciones": 85.2,  "fulfillment_time": 106.7, "pct": 3.3},
-])
+    MATRIZ = pd.DataFrame([
+        {"Socio": 1, "RFM": 2, "Nombre": "Jóvenes Digitales · Regulares Activos", "N": 4194, "Pct": 28.0, "Rec": 76.62, "Freq": 5.48, "Mon": 84.15},
+        {"Socio": 1, "RFM": 1, "Nombre": "Jóvenes Digitales · Leales Premium",   "N": 3461, "Pct": 23.1, "Rec": 70.98, "Freq": 9.31, "Mon": 147.07},
+        {"Socio": 2, "RFM": 2, "Nombre": "Tradicionales Presenciales · Regulares Activos", "N": 1832, "Pct": 12.2, "Rec": 74.72, "Freq": 5.60, "Mon": 74.38},
+        {"Socio": 0, "RFM": 2, "Nombre": "Adultos Drive-Thru · Regulares Activos",         "N": 1364, "Pct": 9.1,  "Rec": 75.95, "Freq": 5.55, "Mon": 76.21},
+        {"Socio": 1, "RFM": 0, "Nombre": "Jóvenes Digitales · Dormidos",          "N": 1296, "Pct": 8.6,  "Rec": 301.47, "Freq": 4.22, "Mon": 65.94},
+        {"Socio": 2, "RFM": 1, "Nombre": "Tradicionales Presenciales · Leales Premium",            "N": 971,  "Pct": 6.5,  "Rec": 67.40, "Freq": 9.61, "Mon": 133.87},
+        {"Socio": 0, "RFM": 1, "Nombre": "Adultos Drive-Thru · Leales Premium",            "N": 822,  "Pct": 5.5,  "Rec": 71.33, "Freq": 9.55, "Mon": 135.05},
+        {"Socio": 2, "RFM": 0, "Nombre": "Tradicionales Presenciales · Dormidos",                  "N": 557,  "Pct": 3.7,  "Rec": 290.57, "Freq": 4.21, "Mon": 55.72},
+        {"Socio": 0, "RFM": 0, "Nombre": "Adultos Drive-Thru · Dormidos",                  "N": 491,  "Pct": 3.3,  "Rec": 292.10, "Freq": 4.02, "Mon": 54.98},
+    ])
 
-# Comparación de modelos
+    AFINIDAD = pd.DataFrame([
+        {"Segmento": "Jóvenes Digitales · Regulares Activos", "cart_size": 101.1, "satisfaccion": 100.9, "personalizaciones": 108.8, "fulfillment_time": 101.8, "pct": 28.0},
+        {"Segmento": "Jóvenes Digitales · Leales Premium",    "cart_size": 105.2, "satisfaccion": 100.7, "personalizaciones": 108.8, "fulfillment_time": 100.8, "pct": 23.1},
+        {"Segmento": "Tradicionales Presenciales · Regulares Activos",          "cart_size": 93.3,  "satisfaccion": 98.9,  "personalizaciones": 83.8,  "fulfillment_time": 91.0,  "pct": 12.2},
+        {"Segmento": "Adultos Drive-Thru · Regulares Activos",          "cart_size": 95.4,  "satisfaccion": 98.1,  "personalizaciones": 88.6,  "fulfillment_time": 105.4, "pct": 9.1},
+        {"Segmento": "Jóvenes Digitales · Dormidos",           "cart_size": 103.3, "satisfaccion": 101.5, "personalizaciones": 111.4, "fulfillment_time": 103.0, "pct": 8.6},
+        {"Segmento": "Tradicionales Presenciales · Leales Premium",             "cart_size": 98.5,  "satisfaccion": 99.2,  "personalizaciones": 86.4,  "fulfillment_time": 93.7,  "pct": 6.5},
+        {"Segmento": "Adultos Drive-Thru · Leales Premium",            "cart_size": 98.5,  "satisfaccion": 98.3,  "personalizaciones": 91.2,  "fulfillment_time": 104.4, "pct": 5.5},
+        {"Segmento": "Tradicionales Presenciales · Dormidos",                   "cart_size": 93.7,  "satisfaccion": 98.9,  "personalizaciones": 83.1,  "fulfillment_time": 89.1,  "pct": 3.7},
+        {"Segmento": "Adultos Drive-Thru · Dormidos",                   "cart_size": 95.5,  "satisfaccion": 98.0,  "personalizaciones": 85.2,  "fulfillment_time": 106.7, "pct": 3.3},
+    ])
+
 COMPARACION = pd.DataFrame({
     "Modelo": ["Socio (K-Means)", "Socio (LCA)", "RFM (K-Means)", "RFM (LCA)"],
     "K": [3, 3, 3, 4],
@@ -329,6 +384,7 @@ COMPARACION = pd.DataFrame({
     "Davies-Bouldin": [2.364, 3.159, 0.887, 0.755],
     "Entropía": [None, 0.553, None, 0.666],
 })
+
 
 # =========================================================
 # NAVEGACIÓN
@@ -344,6 +400,7 @@ SLIDES = [
     "Comparación Formal de Modelos",
     "Matriz de Segmentos Cruzados",
     "Caracterización por Afinidad",
+    "Visualizaciones Complementarias",
     "Identificación de Mercados Meta",
     "Estrategia de Posicionamiento",
     "Conclusiones y Recomendaciones",
@@ -378,7 +435,7 @@ if slide == 0:
     st.markdown("<br><br>", unsafe_allow_html=True)
     st.markdown(f"""
     <div style='text-align:center; padding: 2rem;'>
-        <p style='color:{GOLD}; letter-spacing: 4px; font-size: 0.9rem; margin-bottom: 0;'>
+        <p style='color:{GREEN_LIGHT}; font-weight: 700; letter-spacing: 4px; font-size: 0.95rem; margin-bottom: 0;'>
             MERCADO 2 · STARBUCKS AMÉRICA
         </p>
         <h1 style='font-size: 3.8rem; line-height: 1.1; margin: 1rem 0;'>
@@ -656,7 +713,7 @@ elif slide == 6:
 
         st.markdown(f"""
         <div class='quote-block'>
-        El cluster <strong>Mainstream Mayoritario</strong> concentra el 60% del mercado.
+        El cluster <strong>Jóvenes Digitales</strong> concentra el 60% del mercado.
         La diferenciación entre clientes valiosos y casuales <em>no está</em> en el perfil
         sociodemográfico sino en el patrón de consumo (RFM).
         </div>
@@ -759,7 +816,7 @@ elif slide == 8:
     pivot = MATRIZ.pivot_table(
         index="Socio", columns="RFM", values="Pct", fill_value=0
     )
-    nombres_socio_map = {0: "Nicho A", 1: "Mainstream", 2: "Nicho B"}
+    nombres_socio_map = {0: "Adultos Drive-Thru", 1: "Jóvenes Digitales", 2: "Tradicionales Presenciales"}
     nombres_rfm_map   = {0: "Dormidos", 1: "Leales Premium", 2: "Regulares Activos"}
     pivot.index = [nombres_socio_map[i] for i in pivot.index]
     pivot.columns = [nombres_rfm_map[i] for i in pivot.columns]
@@ -817,7 +874,7 @@ elif slide == 9:
 
     fig = px.imshow(
         af, text_auto=".1f", aspect="auto",
-        color_continuous_scale=[[0, ACCENT_RED], [0.5, "#fff8e7"], [1, GREEN_DARK]],
+        color_continuous_scale=[[0, ACCENT_RED], [0.5, "#fff8e7"], [1, GREEN_LIGHT]],
         color_continuous_midpoint=100,
         labels=dict(x="Variable de experiencia", y="Segmento", color="Índice (base 100)"),
     )
@@ -833,16 +890,207 @@ elif slide == 9:
     st.markdown(f"""
     <div class='quote-block'>
     <strong>Hallazgo clave:</strong> las personalizaciones son el mejor proxy del valor del cliente.
-    El segmento <em>Mainstream Mayoritario · Leales Premium</em> alcanza afinidad 109 en
+    El segmento <em>Jóvenes Digitales · Leales Premium</em> alcanza afinidad 109 en
     <code>num_customizations</code>, sugiriendo que el menú customizable es un driver de retención
     más fuerte que el ticket promedio.
     </div>
     """, unsafe_allow_html=True)
 
 # =========================================================
-# SLIDE 10 — MERCADOS META
+# SLIDE 10 — VISUALIZACIONES COMPLEMENTARIAS
 # =========================================================
 elif slide == 10:
+    st.title("Visualizaciones Complementarias")
+    st.markdown("Análisis visual avanzado de los clusters y perfiles (Parte 11 del notebook).")
+    
+    opcion = st.selectbox(
+        "Seleccione una visualización avanzada:",
+        [
+            "1. Distribución Categórica por Cluster (LCA)",
+            "2. Violin Plots — Distribución RFM por Cluster",
+            "3. Radar Chart — Comparación Multidimensional",
+            "4. Visualización 3D — Espacio de Clientes RFM"
+        ]
+    )
+    
+    data_path = Path("outputs/clientes_segmentados.csv")
+    if not data_path.exists():
+        st.warning("⚠️ Los archivos de datos complementarios no están generados en `/outputs`. Asegúrate de que el notebook se haya ejecutado por completo.")
+    else:
+        df_clientes = pd.read_csv(data_path)
+        
+        if "1. Distribución Categórica" in opcion:
+            st.markdown("### Composición Categórica de los Clusters Sociodemográficos (LCA)")
+            var_cat = st.selectbox(
+                "Selecciona una variable sociodemográfica para ver su distribución:",
+                ["customer_age_group", "customer_gender", "region", "store_location_type", "order_channel", "is_rewards_member"]
+            )
+            
+            tabla = pd.crosstab(df_clientes['Nombre_Socio'], df_clientes[var_cat], normalize='index') * 100
+            tabla = tabla.reset_index()
+            tabla_melt = pd.melt(tabla, id_vars=['Nombre_Socio'], var_name=var_cat, value_name='Porcentaje')
+            
+            fig = px.bar(
+                tabla_melt,
+                y='Nombre_Socio',
+                x='Porcentaje',
+                color=var_cat,
+                orientation='h',
+                title=f'Distribución de {var_cat} por Cluster LCA',
+                color_discrete_sequence=px.colors.qualitative.Pastel,
+                labels={'Nombre_Socio': 'Cluster Sociodemográfico', 'Porcentaje': '% dentro del cluster'}
+            )
+            fig.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                legend_title_text=var_cat,
+                height=350,
+                xaxis=dict(range=[0, 100])
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown("Esta visualización nos permite ver la distribución de cada categoría sociodemográfica en los tres clusters identificados por LCA.")
+            
+        elif "2. Violin Plots" in opcion:
+            st.markdown("### Distribución Completa de las Variables RFM por Cluster (Violin Plots)")
+            var_rfm = st.selectbox(
+                "Selecciona una variable RFM:",
+                ["Recency", "Frequency", "Monetary"]
+            )
+            
+            fig = px.violin(
+                df_clientes,
+                x="Nombre_RFM",
+                y=var_rfm,
+                color="Nombre_RFM",
+                box=True,
+                points="outliers",
+                title=f'Distribución de {var_rfm} por Cluster RFM',
+                color_discrete_map=PALETA_RFM,
+                labels={"Nombre_RFM": "Cluster RFM", var_rfm: f"Valor de {var_rfm}"}
+            )
+            fig.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                plot_bgcolor="rgba(0,0,0,0)",
+                yaxis=dict(gridcolor="rgba(0,0,0,0.06)"),
+                showlegend=False,
+                height=450
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown("A diferencia de los promedios simples, el gráfico de violín revela la distribución completa (cuartiles, densidad y valores atípicos) de cada segmento RFM.")
+            
+        elif "3. Radar Chart" in opcion:
+            st.markdown("### Comparación Multidimensional (Radar de Afinidades)")
+            
+            vars_radar = ['Recency_inv', 'Frequency', 'Monetary', 'customer_satisfaction', 'cart_size']
+            perfil = (df_clientes.groupby('Segmento_Nombre')
+                      .agg(Recency=('Recency', 'mean'),
+                           Frequency=('Frequency', 'mean'),
+                           Monetary=('Monetary', 'mean'),
+                           customer_satisfaction=('customer_satisfaction', 'mean'),
+                           cart_size=('cart_size', 'mean'),
+                           N=('customer_id', 'count'))
+                      .copy())
+            
+            perfil['Recency_inv'] = perfil['Recency'].max() - perfil['Recency']
+            
+            perfil_norm = perfil[vars_radar].copy()
+            for v in vars_radar:
+                rng = perfil_norm[v].max() - perfil_norm[v].min()
+                perfil_norm[v] = (perfil_norm[v] - perfil_norm[v].min()) / (rng if rng > 0 else 1)
+                
+            top_segs = perfil['N'].sort_values(ascending=False).head(4).index.tolist()
+            
+            fig = go.Figure()
+            colores_radar = ['#006241', '#cba258', '#a6192e', '#1e3932']
+            etiquetas_radar = ['Recency Invertida', 'Frequency', 'Monetary', 'Satisfacción', 'Cart size']
+            
+            for i, seg in enumerate(top_segs):
+                valores = perfil_norm.loc[seg, vars_radar].tolist()
+                valores += valores[:1]
+                
+                fig.add_trace(go.Scatterpolar(
+                    r=valores,
+                    theta=etiquetas_radar + [etiquetas_radar[0]],
+                    fill='toself',
+                    name=f'{seg} (n={perfil.loc[seg, "N"]:.0f})',
+                    line=dict(color=colores_radar[i], width=2.5)
+                ))
+                
+            fig.update_layout(
+                polar=dict(
+                    radialaxis=dict(
+                        visible=True,
+                        range=[0, 1.05],
+                        gridcolor="rgba(0,0,0,0.06)",
+                    ),
+                    angularaxis=dict(
+                        gridcolor="rgba(0,0,0,0.06)"
+                    )
+                ),
+                paper_bgcolor="rgba(0,0,0,0)",
+                font=dict(family="Inter, sans-serif"),
+                height=500,
+                legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5)
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown("El radar compara los 4 segmentos cruzados más grandes de forma simultánea. Valores más cercanos al borde exterior indican un mejor comportamiento o afinidad en esa variable.")
+            
+        elif "4. Visualización 3D" in opcion:
+            st.markdown("### Representación 3D del Espacio Conductual RFM")
+            sample_3d = df_clientes.sample(min(5000, len(df_clientes)), random_state=42)
+            
+            fig = px.scatter_3d(
+                sample_3d,
+                x='Recency',
+                y='Frequency',
+                z='Monetary',
+                color='Nombre_RFM',
+                color_discrete_map=PALETA_RFM,
+                opacity=0.5,
+                title='Espacio 3D de Clientes Starbucks (Muestra de 5,000 clientes)',
+                labels={'Nombre_RFM': 'Segmento RFM', 'Recency': 'Recency (días)', 'Frequency': 'Frequency (compras)', 'Monetary': 'Monetary ($)'}
+            )
+            
+            fig.update_traces(marker=dict(size=4))
+            
+            # Centroides
+            centroides = df_clientes.groupby('Nombre_RFM')[['Recency', 'Frequency', 'Monetary']].mean().reset_index()
+            
+            fig.add_trace(go.Scatter3d(
+                x=centroides['Recency'],
+                y=centroides['Frequency'],
+                z=centroides['Monetary'],
+                mode='markers+text',
+                text=centroides['Nombre_RFM'],
+                textposition="top center",
+                marker=dict(
+                    symbol='diamond',
+                    size=12,
+                    color=[PALETA_RFM[n] for n in centroides['Nombre_RFM']],
+                    line=dict(color='black', width=3)
+                ),
+                name='Centroides'
+            ))
+            
+            fig.update_layout(
+                paper_bgcolor="rgba(0,0,0,0)",
+                font=dict(family="Inter, sans-serif"),
+                height=600,
+                scene=dict(
+                    xaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.06)"),
+                    yaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.06)"),
+                    zaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.06)"),
+                ),
+                margin=dict(l=0, r=0, b=0, t=30),
+                legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
+            )
+            st.plotly_chart(fig, use_container_width=True)
+            st.markdown("Este gráfico 3D interactivo le permite arrastrar, rotar y hacer zoom para explorar la distribución espacial tridimensional de los clientes en función de sus tres métricas de comportamiento (Recency, Frequency, Monetary). Los diamantes grandes representan los centros de gravedad de cada grupo.")
+
+# =========================================================
+# SLIDE 11 — MERCADOS META (ANTES SLIDE 10)
+# =========================================================
+elif slide == 11:
     st.title("Identificación de Mercados Meta")
     st.markdown("Aplicación de los **cuatro criterios STP** (Kotler) sobre los 9 segmentos.")
 
@@ -864,7 +1112,7 @@ elif slide == 10:
         st.markdown(f"""
         <div class='meta-card'>
             <span class='badge'>⭐ Meta Principal</span>
-            <h3>Mainstream Regular</h3>
+            <h3>Jóvenes Digitales · Regulares Activos</h3>
             <p style='font-size:0.9rem; color:{NEUTRAL};'>
             28% del mercado · 5.5 compras/cliente · $84 ticket medio
             </p>
@@ -876,7 +1124,7 @@ elif slide == 10:
         st.markdown(f"""
         <div class='meta-card premium'>
             <span class='badge gold'>⭐ Meta Principal</span>
-            <h3>Mainstream Premium</h3>
+            <h3>Jóvenes Digitales · Leales Premium</h3>
             <p style='font-size:0.9rem; color:{NEUTRAL};'>
             23% del mercado · 9.3 compras/cliente · $147 ticket medio
             </p>
@@ -888,7 +1136,7 @@ elif slide == 10:
         st.markdown(f"""
         <div class='meta-card reactivacion'>
             <span class='badge red'>🔄 Reactivación</span>
-            <h3>Mainstream Dormido</h3>
+            <h3>Jóvenes Digitales · Dormidos</h3>
             <p style='font-size:0.9rem; color:{NEUTRAL};'>
             9% del mercado · 301 días sin comprar · perfil idéntico al meta principal
             </p>
@@ -904,15 +1152,15 @@ elif slide == 10:
     )
 
 # =========================================================
-# SLIDE 11 — POSICIONAMIENTO
+# SLIDE 12 — POSICIONAMIENTO (ANTES SLIDE 11)
 # =========================================================
-elif slide == 11:
+elif slide == 12:
     st.title("Estrategia de Posicionamiento")
     st.markdown("Propuesta de valor diferenciada para cada mercado meta.")
 
     posic = [
         {
-            "nombre": "Mainstream Regular",
+            "nombre": "Jóvenes Digitales · Regulares Activos",
             "clase": "",
             "badge": "",
             "insight": "Busca consistencia y rapidez. Starbucks es parte de su rutina, no un evento.",
@@ -921,7 +1169,7 @@ elif slide == 11:
             "tactica": "Rewards con beneficios de baja barrera (descuentos por frecuencia, refill gratis).",
         },
         {
-            "nombre": "Mainstream Premium",
+            "nombre": "Jóvenes Digitales · Leales Premium",
             "clase": "premium",
             "badge": "gold",
             "insight": "Quiere personalización y reconocimiento. Paga por una experiencia adaptada.",
@@ -930,7 +1178,7 @@ elif slide == 11:
             "tactica": "Rewards multi-tier con beneficios premium (early access, ediciones limitadas).",
         },
         {
-            "nombre": "Mainstream Dormido",
+            "nombre": "Jóvenes Digitales · Dormidos",
             "clase": "reactivacion",
             "badge": "red",
             "insight": "Conoce la marca y ya consumió antes. La barrera no es awareness sino re-enganche.",
@@ -953,9 +1201,9 @@ elif slide == 11:
         """, unsafe_allow_html=True)
 
 # =========================================================
-# SLIDE 12 — CONCLUSIONES
+# SLIDE 13 — CONCLUSIONES (ANTES SLIDE 12)
 # =========================================================
-elif slide == 12:
+elif slide == 13:
     st.title("Conclusiones y Recomendaciones")
 
     st.markdown("### Hallazgos no triviales")
@@ -970,7 +1218,7 @@ elif slide == 12:
         </div>
         <div class='meta-card'>
             <h3 style='font-size:1.1rem;'>2. Demografía no diferencia valor</h3>
-            <p>El segmento mayoritario (60%) aparece en todos los niveles RFM.
+            <p>El segmento mayoritario de Jóvenes Digitales (60%) aparece en todos los niveles RFM.
             La diferenciación entre cliente valioso y casual está en el <strong>comportamiento</strong>,
             no en el perfil demográfico.</p>
         </div>
@@ -979,7 +1227,7 @@ elif slide == 12:
         st.markdown(f"""
         <div class='meta-card premium'>
             <h3 style='font-size:1.1rem;'>3. Reactivación bajo costo</h3>
-            <p>Los Mainstream Dormidos (9%) comparten perfil con el segmento más grande
+            <p>Los Jóvenes Digitales Dormidos (9%) comparten perfil con el segmento más grande
             pero llevan ~300 días sin comprar. <strong>Una campaña win-back digital</strong>
             puede convertirlos en regulares activos.</p>
         </div>
@@ -997,7 +1245,7 @@ elif slide == 12:
     with col1:
         st.markdown("""
         ### 📊 Limitaciones del estudio
-
+ 
         - Datos sintéticos: validar con data real antes de invertir
         - Sin información de competencia ni precios inmobiliarios
         - Snapshot temporal fijo (no captura tendencias)
@@ -1007,7 +1255,7 @@ elif slide == 12:
     with col2:
         st.markdown("""
         ### 🔜 Próximos pasos al inversionista
-
+ 
         - Validar segmentación con piloto en 1-2 zonas
         - Análisis económico por ubicación (renta, foot traffic)
         - Estudio de canibalización vs tiendas existentes
