@@ -23,21 +23,23 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Paleta Starbucks (Edición Premium Dark Mode)
-GREEN_DARK   = "#0f1e1a" # Deep forest green-black (App background)
-GREEN_LIGHT  = "#00b374" # Vibrant house green (Primary accents)
-GOLD         = "#cba258" # Warm accent gold
-ACCENT_RED   = "#ef4444" # Bright red for alerts/dormidos
-NEUTRAL      = "#eceff1" # Soft white/light gray for text
-BG_CREAM     = "#0f1e1a" # Deep background
-BG_CARD      = "#182c26" # Lighter forest green for cards
+# Paleta Starbucks (Edición Premium Light Cream & Green)
+GREEN_DARK    = "#1e3932" # Deep forest green (Headings & Sidebar background)
+GREEN_LIGHT   = "#006241" # Starbucks Classic Green (Primary accents)
+GOLD          = "#cba258" # Warm accent gold
+ACCENT_RED    = "#a6192e" # Elegant warm red for alerts/dormidos
+NEUTRAL_DARK  = "#212121" # Dark charcoal for readable text in main content
+NEUTRAL_LIGHT = "#f9f6f0" # Cream for light-on-dark text in sidebar
+BG_CREAM      = "#f9f6f0" # Warm off-white/cream main background
+BG_CARD       = "#ffffff" # Pure white card background
+BORDER_COLOR  = "#e0dbd3" # Border for cards
 
 PALETA_RFM = {
     "Dormidos":          ACCENT_RED,
     "Regulares Activos": GOLD,
     "Leales Premium":    GREEN_LIGHT,
 }
-PALETA_SOCIO = [GREEN_LIGHT, GOLD, "#1e3932"]
+PALETA_SOCIO = [GREEN_LIGHT, GOLD, GREEN_DARK]
 
 # =========================================================
 # ESTILOS
@@ -49,12 +51,12 @@ st.markdown(f"""
     /* Global Typography and Contrast Control */
     html, body, [data-testid="stAppViewContainer"] {{
         font-family: 'Inter', sans-serif;
-        color: {NEUTRAL};
+        color: {NEUTRAL_DARK};
     }}
     
     h1, h2, h3, h4, h5, h6 {{
         font-family: 'Playfair Display', serif;
-        color: white !important;
+        color: {GREEN_DARK} !important;
         font-weight: 800;
     }}
     
@@ -73,11 +75,11 @@ st.markdown(f"""
         max-width: 1200px;
     }}
     
-    /* Sidebar Styling (High contrast, dark theme native layout) */
+    /* Sidebar Styling (High contrast, dark green sidebar layout) */
     section[data-testid="stSidebar"] {{
-        background-color: {BG_CARD} !important;
-        box-shadow: 4px 0 15px rgba(0,0,0,0.3);
-        border-right: 1px solid rgba(255, 255, 255, 0.05);
+        background-color: {GREEN_DARK} !important;
+        box-shadow: 4px 0 15px rgba(0,0,0,0.15);
+        border-right: 1px solid rgba(0, 0, 0, 0.05);
     }}
     
     section[data-testid="stSidebar"] h1,
@@ -93,11 +95,11 @@ st.markdown(f"""
     section[data-testid="stSidebar"] span,
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] li {{
-        color: {NEUTRAL} !important;
+        color: {NEUTRAL_LIGHT} !important;
     }}
     
     section[data-testid="stSidebar"] hr {{
-        border-color: rgba(255, 255, 255, 0.08) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
     }}
 
     /* Modern Navigation Tabs inside Sidebar */
@@ -114,15 +116,15 @@ st.markdown(f"""
     
     /* Secondary (inactive) button in sidebar */
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"] {{
-        background-color: rgba(255, 255, 255, 0.03);
-        color: rgba(255, 255, 255, 0.7) !important;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background-color: rgba(255, 255, 255, 0.04);
+        color: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }}
     
     section[data-testid="stSidebar"] div[data-testid="stButton"] button[kind="secondary"]:hover {{
-        background-color: rgba(0, 179, 116, 0.15);
-        color: {GREEN_LIGHT} !important;
-        border-color: {GREEN_LIGHT};
+        background-color: rgba(0, 98, 65, 0.25);
+        color: {GOLD} !important;
+        border-color: {GOLD};
         transform: translateX(4px);
     }}
     
@@ -147,15 +149,15 @@ st.markdown(f"""
     }}
     
     .slide-counter {{
-        color: {NEUTRAL};
+        color: {NEUTRAL_DARK};
         text-align: center;
         font-size: 0.9rem;
         font-weight: 500;
         opacity: 0.8;
-        background: rgba(255, 255, 255, 0.03);
+        background: rgba(0, 0, 0, 0.03);
         padding: 0.5rem;
         border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.05);
     }}
     
     /* Metrics & Cards Styling with Soft Shadows and Micro-animations */
@@ -165,32 +167,32 @@ st.markdown(f"""
         border-radius: 16px;
         border-left: 5px solid {GREEN_LIGHT};
         margin: 0.8rem 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        border: 1px solid {BORDER_COLOR};
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
     
     .metric-card:hover {{
         transform: translateY(-2px);
-        box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
     }}
     
     .metric-value {{
         font-family: 'Playfair Display', serif;
         font-size: 2.4rem;
         font-weight: 900;
-        color: {GOLD};
+        color: {GREEN_DARK};
         line-height: 1;
     }}
     
     .metric-label {{
-        color: {NEUTRAL};
+        color: {NEUTRAL_DARK};
         font-size: 0.85rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1.2px;
         margin-top: 0.4rem;
-        opacity: 0.7;
+        opacity: 0.6;
     }}
     
     .meta-card {{
@@ -199,14 +201,14 @@ st.markdown(f"""
         border-radius: 20px;
         border-top: 6px solid {GREEN_LIGHT};
         margin: 1.2rem 0;
-        box-shadow: 0 6px 24px rgba(0,0,0,0.15);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border: 1px solid {BORDER_COLOR};
         transition: transform 0.25s ease, box-shadow 0.25s ease;
     }}
     
     .meta-card:hover {{
         transform: translateY(-3px);
-        box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.08);
     }}
     
     .meta-card.reactivacion {{
@@ -221,7 +223,11 @@ st.markdown(f"""
         margin-top: 0;
         font-size: 1.5rem;
         font-weight: 800;
-        color: white !important;
+        color: {GREEN_DARK} !important;
+    }}
+    
+    .meta-card p, .meta-card li {{
+        color: {NEUTRAL_DARK} !important;
     }}
     
     .meta-card .badge {{
@@ -248,22 +254,22 @@ st.markdown(f"""
     }}
     
     .quote-block {{
-        background: {BG_CARD};
+        background: #f1ede7;
         border-left: 6px solid {GOLD};
         padding: 1.6rem 2.2rem;
         margin: 1.8rem 0;
         font-style: italic;
         font-size: 1.1rem;
-        color: rgba(255, 255, 255, 0.85);
+        color: {GREEN_DARK};
         border-radius: 0 16px 16px 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        border: 1px solid {BORDER_COLOR};
         border-left-width: 6px;
     }}
     
     .footer-portada {{
-        color: {NEUTRAL};
-        opacity: 0.6;
+        color: {NEUTRAL_DARK};
+        opacity: 0.7;
         font-size: 0.9rem;
         line-height: 1.6;
     }}
@@ -271,7 +277,7 @@ st.markdown(f"""
     hr {{
         border: 0;
         height: 1px;
-        background-image: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
         margin: 2rem 0;
     }}
 </style>
@@ -444,7 +450,7 @@ if slide == 0:
         <h1 style='font-size: 3.8rem; line-height: 1.1; margin: 1rem 0;'>
             Segmentación,<br>Mercados Meta<br>y Posicionamiento
         </h1>
-        <p style='font-size: 1.15rem; color: {NEUTRAL}; max-width: 600px; margin: 1.5rem auto;'>
+        <p style='font-size: 1.15rem; color: {NEUTRAL_DARK}; max-width: 600px; margin: 1.5rem auto;'>
             Análisis estratégico de marketing para orientar la decisión de apertura
             de nuevas franquicias en Estados Unidos.
         </p>
@@ -658,7 +664,7 @@ elif slide == 5:
             margin=dict(t=20, b=20, l=20, r=20),
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Inter, sans-serif", color="#eceff1"),
+            font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
             height=350,
         )
         st.plotly_chart(fig, use_container_width=True)
@@ -684,15 +690,15 @@ elif slide == 5:
         yaxis=dict(
             title="Valor normalizado [0,1]", 
             range=[-0.05, 1.1],
-            gridcolor="rgba(255,255,255,0.08)",
-            zerolinecolor="rgba(255,255,255,0.15)"
+            gridcolor="rgba(0,0,0,0.08)",
+            zerolinecolor="rgba(0,0,0,0.1)"
         ),
         xaxis=dict(
-            gridcolor="rgba(255,255,255,0.08)"
+            gridcolor="rgba(0,0,0,0.08)"
         ),
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter, sans-serif", color="#eceff1"),
+        font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
         height=350,
         margin=dict(t=20, b=20),
         legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5),
@@ -735,8 +741,8 @@ elif slide == 6:
             showlegend=False,
             paper_bgcolor="rgba(0,0,0,0)",
             plot_bgcolor="rgba(0,0,0,0)",
-            font=dict(family="Inter, sans-serif"),
-            yaxis=dict(gridcolor="rgba(0,0,0,0.06)"),
+            font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
+            yaxis=dict(gridcolor="rgba(0,0,0,0.08)"),
             yaxis_title="N° clientes",
             xaxis_title="",
             height=400,
@@ -826,13 +832,13 @@ elif slide == 8:
 
     fig = px.imshow(
         pivot, text_auto=".1f", aspect="auto",
-        color_continuous_scale=[[0, "#fff8e7"], [0.5, GOLD], [1, GREEN_DARK]],
+        color_continuous_scale=[[0, "#ffffff"], [0.5, GOLD], [1, GREEN_DARK]],
         labels=dict(x="Comportamiento RFM", y="Perfil Sociodemográfico", color="% mercado"),
     )
     fig.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter, sans-serif"),
+        font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
         height=400,
         margin=dict(t=30, b=20),
         coloraxis_colorbar=dict(title="% mercado"),
@@ -851,8 +857,8 @@ elif slide == 8:
     fig2.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter, sans-serif"),
-        xaxis=dict(gridcolor="rgba(0,0,0,0.06)"),
+        font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
+        xaxis=dict(gridcolor="rgba(0,0,0,0.08)"),
         xaxis_title="% del mercado",
         yaxis_title="",
         height=450,
@@ -877,14 +883,14 @@ elif slide == 9:
 
     fig = px.imshow(
         af, text_auto=".1f", aspect="auto",
-        color_continuous_scale=[[0, ACCENT_RED], [0.5, "#fff8e7"], [1, GREEN_LIGHT]],
+        color_continuous_scale=[[0, ACCENT_RED], [0.5, "#ffffff"], [1, GREEN_LIGHT]],
         color_continuous_midpoint=100,
         labels=dict(x="Variable de experiencia", y="Segmento", color="Índice (base 100)"),
     )
     fig.update_layout(
         paper_bgcolor="rgba(0,0,0,0)",
         plot_bgcolor="rgba(0,0,0,0)",
-        font=dict(family="Inter, sans-serif"),
+        font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
         height=500,
         margin=dict(t=30, b=20),
     )
@@ -946,9 +952,11 @@ elif slide == 10:
             fig.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
+                font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
                 legend_title_text=var_cat,
                 height=350,
-                xaxis=dict(range=[0, 100])
+                xaxis=dict(range=[0, 100], gridcolor="rgba(0,0,0,0.08)"),
+                yaxis=dict(gridcolor="rgba(0,0,0,0.08)")
             )
             st.plotly_chart(fig, use_container_width=True)
             st.markdown("Esta visualización nos permite ver la distribución de cada categoría sociodemográfica en los tres clusters identificados por LCA.")
@@ -974,7 +982,9 @@ elif slide == 10:
             fig.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
-                yaxis=dict(gridcolor="rgba(0,0,0,0.06)"),
+                font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
+                yaxis=dict(gridcolor="rgba(0,0,0,0.08)"),
+                xaxis=dict(gridcolor="rgba(0,0,0,0.08)"),
                 showlegend=False,
                 height=450
             )
@@ -1024,14 +1034,19 @@ elif slide == 10:
                     radialaxis=dict(
                         visible=True,
                         range=[0, 1.05],
-                        gridcolor="rgba(0,0,0,0.06)",
+                        gridcolor="rgba(0,0,0,0.08)",
+                        linecolor="rgba(0,0,0,0.1)",
+                        tickfont=dict(color=NEUTRAL_DARK)
                     ),
                     angularaxis=dict(
-                        gridcolor="rgba(0,0,0,0.06)"
-                    )
+                        gridcolor="rgba(0,0,0,0.08)",
+                        linecolor="rgba(0,0,0,0.1)",
+                        tickfont=dict(color=NEUTRAL_DARK)
+                    ),
+                    bgcolor="rgba(0,0,0,0)"
                 ),
                 paper_bgcolor="rgba(0,0,0,0)",
-                font=dict(family="Inter, sans-serif"),
+                font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
                 height=500,
                 legend=dict(orientation="h", yanchor="bottom", y=-0.25, xanchor="center", x=0.5)
             )
@@ -1077,12 +1092,12 @@ elif slide == 10:
             
             fig.update_layout(
                 paper_bgcolor="rgba(0,0,0,0)",
-                font=dict(family="Inter, sans-serif"),
+                font=dict(family="Inter, sans-serif", color=NEUTRAL_DARK),
                 height=600,
                 scene=dict(
-                    xaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.06)"),
-                    yaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.06)"),
-                    zaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.06)"),
+                    xaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.08)", tickfont=dict(color=NEUTRAL_DARK), titlefont=dict(color=NEUTRAL_DARK)),
+                    yaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.08)", tickfont=dict(color=NEUTRAL_DARK), titlefont=dict(color=NEUTRAL_DARK)),
+                    zaxis=dict(backgroundcolor="rgba(0,0,0,0)", gridcolor="rgba(0,0,0,0.08)", tickfont=dict(color=NEUTRAL_DARK), titlefont=dict(color=NEUTRAL_DARK)),
                 ),
                 margin=dict(l=0, r=0, b=0, t=30),
                 legend=dict(orientation="h", yanchor="bottom", y=-0.1, xanchor="center", x=0.5)
@@ -1116,7 +1131,7 @@ elif slide == 11:
         <div class='meta-card'>
             <span class='badge'>⭐ Meta Principal</span>
             <h3>Jóvenes Digitales · Regulares Activos</h3>
-            <p style='font-size:0.9rem; color:{NEUTRAL};'>
+            <p style='font-size:0.9rem; color:{NEUTRAL_DARK};'>
             28% del mercado · 5.5 compras/cliente · $84 ticket medio
             </p>
             <p>El cliente más frecuente del mercado. Volumen sostén del negocio.</p>
@@ -1128,7 +1143,7 @@ elif slide == 11:
         <div class='meta-card premium'>
             <span class='badge gold'>⭐ Meta Principal</span>
             <h3>Jóvenes Digitales · Leales Premium</h3>
-            <p style='font-size:0.9rem; color:{NEUTRAL};'>
+            <p style='font-size:0.9rem; color:{NEUTRAL_DARK};'>
             23% del mercado · 9.3 compras/cliente · $147 ticket medio
             </p>
             <p>Núcleo de valor. Frecuencia alta y personalización elevada.</p>
@@ -1140,7 +1155,7 @@ elif slide == 11:
         <div class='meta-card reactivacion'>
             <span class='badge red'>🔄 Reactivación</span>
             <h3>Jóvenes Digitales · Dormidos</h3>
-            <p style='font-size:0.9rem; color:{NEUTRAL};'>
+            <p style='font-size:0.9rem; color:{NEUTRAL_DARK};'>
             9% del mercado · 301 días sin comprar · perfil idéntico al meta principal
             </p>
             <p>Oportunidad de reactivación a bajo costo. Win-back digital.</p>
